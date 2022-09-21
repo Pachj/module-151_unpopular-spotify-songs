@@ -1,5 +1,6 @@
 package ch.bbw.m151.unpopularSpotifySongs;
 
+import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -18,9 +19,10 @@ public class MainController {
         return songRepository.findAllByTempoLessThanAndEnergyGreaterThan(tempo, energy);
     }
 
-    @GetMapping("/findAllBySpeechiness")
-    public List<SongEntity> findAllBySpeechiness(@RequestParam double speechiness) {
-        return songRepository.findAllBySpeechiness(speechiness);
+    // 4b
+    @GetMapping("/findAllWithLimit")
+    public List<SongEntity> findAllWithLimit(@RequestParam int limit) {
+        return songRepository.findAll(Pageable.ofSize(limit)).getContent();
     }
 
     // 4c
