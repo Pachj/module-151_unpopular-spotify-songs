@@ -30,7 +30,6 @@ public class MainController {
     }
 
     // 4d
-    // TODO, no FK
     @GetMapping("/findAll")
     public List<SongEntity> findAll() {
         return songRepository.findAll();
