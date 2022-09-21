@@ -2,7 +2,6 @@ package ch.bbw.m151.unpopularSpotifySongs;
 
 import org.springframework.web.bind.annotation.*;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @RestController
@@ -13,6 +12,7 @@ public class MainController {
         this.songRepository = songRepository;
     }
 
+    // 4a
     @GetMapping("/findAllByTempoLessThanAndEnergyGreaterThan")
     public List<SongEntity> findAllByTempoLessThanAndEnergyGreaterThan(@RequestParam double tempo, double energy) {
         return songRepository.findAllByTempoLessThanAndEnergyGreaterThan(tempo, energy);
@@ -23,16 +23,20 @@ public class MainController {
         return songRepository.findAllBySpeechiness(speechiness);
     }
 
-    @DeleteMapping("/deleteByTrackId")
-    public void deleteByTrackId(@PathParam("id") String id) {
-        songRepository.deleteByTrackId(id);
+    // 4c
+    @DeleteMapping("/deleteByTrackId/{id}")
+    public void deleteByTrackId(@PathVariable String id) {
+        songRepository.deleteById(id);
     }
 
+    // 4d
+    // TODO, no FK
     @GetMapping("/findAll")
     public List<SongEntity> findAll() {
         return songRepository.findAll();
     }
 
+    // 4e
     @GetMapping("/getTempoCount")
     public List<Object[]> getTempoCount() {
         return songRepository.getTempoCount();
