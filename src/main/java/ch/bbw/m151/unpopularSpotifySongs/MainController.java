@@ -37,7 +37,7 @@ public class MainController {
     }
 
     @GetMapping("/getTempoCount")
-    public List<Double> getTempoCount() {
+    public List<Object[]> getTempoCount() {
         return songRepository.getTempoCount();
     }
 }

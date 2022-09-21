@@ -14,6 +14,6 @@ public interface SongRepository extends JpaRepository<SongEntity, String> {
     long deleteByTrackId(String trackId);
 
     // TODO needs to be tested
-    @Query("SELECT tempo, COUNT(tempo) FROM SongEntity GROUP BY tempo")
-    List<Double>getTempoCount();
+    @Query("SELECT tempo, COUNT(tempo) as cnt FROM SongEntity GROUP BY tempo")
+    List<Object[]>getTempoCount();
 }
