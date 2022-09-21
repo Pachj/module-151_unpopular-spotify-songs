@@ -1,9 +1,5 @@
 package ch.bbw.m151.unpopularSpotifySongs;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.*;
 
 import javax.websocket.server.PathParam;
@@ -23,7 +19,7 @@ public class MainController {
     }
 
     @GetMapping("/findAllBySpeechiness")
-    public List<SongEntity> findAllBySpeechiness(@RequestBody double speechiness) {
+    public List<SongEntity> findAllBySpeechiness(@RequestParam double speechiness) {
         return songRepository.findAllBySpeechiness(speechiness);
     }
 
