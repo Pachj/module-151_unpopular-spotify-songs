@@ -11,9 +11,7 @@ public interface SongRepository extends JpaRepository<SongEntity, String> {
     // TODO needs to be limited in controller
     List<SongEntity> findAllBySpeechiness(double speechiness);
 
-    long deleteByTrackId(String trackId);
-
-    // TODO needs to be tested
+    // 4e
     @Query("SELECT tempo, COUNT(tempo) as cnt FROM SongEntity GROUP BY tempo")
     List<Object[]>getTempoCount();
 }
