@@ -2,39 +2,42 @@ package ch.bbw.m151.unpopularSpotifySongs;
 
 
 import org.assertj.core.api.WithAssertions;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@SpringBootTest(properties = {"spring.h2.console.enabled=false"})
+@SpringBootTest
+@Transactional
 public class SongRepositoryTest implements WithAssertions {
 
     @Autowired
     private SongRepository songRepository;
-    //    @Autowired
-//    private TestEntityManager entityManager;
     @Autowired
     private MainController mainController;
 
-    //    @GetMapping("/findAll")
+    // Repository
     @Test
-    void shouldFindAllSongEntities() {
-        assertThat(songRepository.findAll()).hasSize(9923);
+    @DisplayName("Test for query getTempoCount")
+    void shouldNotBeNull() {
+        List<Object[]> tempoCount = songRepository.getTempoCount();
+        assertThat(tempoCount).isNotEmpty();
     }
 
-    //    @GetMapping("/findAllWithLimit")
     @Test
-    void shouldFindInsertedMaximumOfEntities() {
-        int limit = 5;
-        List<SongEntity> allWithLimit = mainController.findAllWithLimit(limit);
-        assertThat(allWithLimit).hasSize(limit);
+    @DisplayName("Test for query getTempoCount")
+    void shouldHaveAsManyListEntriesAsDifferentTempos() {
+        int differentTemposInDatabase = 8804;
+        List<Object[]> tempoCount = songRepository.getTempoCount();
+        assertThat(tempoCount.size()).isEqualTo(differentTemposInDatabase);
     }
 
-    //    @GetMapping("/findAllByTempoLessThanAndEnergyGreaterThan")
     @Test
+    @DisplayName("Test for query findAllByTempoLessThanAndEnergyGreaterThan")
     void shouldFindWithSpecifiedTempoAndEnergy() {
         double tempo = 144.077;
         double energy = 0.5;
@@ -42,8 +45,49 @@ public class SongRepositoryTest implements WithAssertions {
         assertThat(foundEntities).hasSize(4526);
     }
 
-    //    @DeleteMapping("/deleteByTrackId/{id}")
     @Test
+    @DisplayName("Test for query findAllByTempoLessThanAndEnergyGreaterThan")
+    void shouldFindNoEntityIfTempoIsTooLow() {
+        double tempo = 0.0;
+        double energy = 0.5;
+        List<SongEntity> foundEntities = songRepository.findAllByTempoLessThanAndEnergyGreaterThan(tempo, energy);
+        assertThat(foundEntities).isEmpty();
+    }
+
+    @Test
+    @DisplayName("Test for query findAllByTempoLessThanAndEnergyGreaterThan")
+    void shouldFindNoEntityIfEnergyIsTooHigh() {
+        double tempo = 144.077;
+        double energy = 1;
+        List<SongEntity> foundEntities = songRepository.findAllByTempoLessThanAndEnergyGreaterThan(tempo, energy);
+        assertThat(foundEntities).isEmpty();
+    }
+
+    // Controller
+    @Test
+    @DisplayName("Test for query findAll")
+    void shouldFindAllSongEntities() {
+        assertThat(mainController.findAll()).hasSize(9923);
+    }
+
+    @Test
+    @DisplayName("Test for query findAllWithLimit")
+    void shouldFindInsertedMaximumOfEntities() {
+        int limit = 5;
+        List<SongEntity> allWithLimit = mainController.findAllWithLimit(limit);
+        assertThat(allWithLimit).hasSize(limit);
+    }
+
+    @Test
+    @DisplayName("Test for query findAllWithLimit")
+    void shouldFindAllEntitiesIfLimitIsHigherThanAmountOfEntries() {
+        int limitHigherAmountEntries = 10000;
+        List<SongEntity> allWithLimit = mainController.findAllWithLimit(limitHigherAmountEntries);
+        assertThat(allWithLimit).hasSize(songRepository.findAll().size());
+    }
+
+    @Test
+    @DisplayName("Test for query deleteByTrackId")
     void shouldDeleteEntityById() {
         String id = "701JUA6oOLOLbUqeskgGf6";
         Optional<SongEntity> songEntity = songRepository.findById(id);
@@ -51,8 +95,4 @@ public class SongRepositoryTest implements WithAssertions {
         mainController.deleteByTrackId(id);
         assertThat(songRepository.findAll()).doesNotContain(songEntity.get());
     }
-
-
-//    @GetMapping("/getTempoCount")
-
 }
